@@ -27,6 +27,7 @@ PATH_TO_BASE = os.path.join(CURRENT_PATH, '..')
 USE_HEPSHELL_COMMANDS = os.getenv('USE_HEPSHELL_COMMANDS', 0)
 HEP_PROJECT_COMMANDS = os.getenv(
     'HEP_PROJECT_COMMANDS', '')
+HEP_PROJECT_BASE_MODULE = os.getenv('HEP_PROJECT_BASE_MODULE', '')
 COMMAND_PATHS = []
 if USE_HEPSHELL_COMMANDS:
     COMMAND_PATHS.append(os.path.join(CURRENT_PATH, 'commands'))
@@ -109,7 +110,8 @@ def __get_commands(command_paths):
                 continue
             # Convert directory structure to module path
             relative_path = relative_path.replace('/', '.')
-            absolute_path = '{0}.{1}'.format(BASE_MODULE, relative_path)
+            base_module = BASE_MODULE if 'hepshell' in command_path else HEP_PROJECT_BASE_MODULE
+            absolute_path = '{0}.{1}'.format(base_module, relative_path)
             try:
                 if sys.version_info < (2, 7):
                     mod = import_module(absolute_path, fromlist=['Command'])
@@ -118,7 +120,8 @@ def __get_commands(command_paths):
                 if hasattr(mod, 'Command'):
                     if type(mod.Command) is type(object):
                         commands[relative_path] = mod.Command
-                        __build_hierarchy(hierarchy, relative_path, mod.Command)
+                        __build_hierarchy(
+                            hierarchy, relative_path, mod.Command)
             except ImportError:
                 import traceback
                 LOG.error('Could not import {0}'.format(absolute_path))
