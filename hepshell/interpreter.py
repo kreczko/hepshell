@@ -16,9 +16,10 @@ try:
 except:
     import_module = __import__
 
-PROMPT = 'hep > '
-HISTFILE = os.path.expanduser('~/.hep_history')
-LOGFILE = os.path.expanduser('~/.hep_log')
+from hepshell import COMMAND_PATHS
+
+HISTFILE = os.path.expanduser('~/.hepshell_history')
+LOGFILE = os.path.expanduser('~/.hepshell_log')
 COMPLETEKEY = 'tab'
 
 CURRENT_PATH = os.path.split(__file__)[0]
@@ -73,7 +74,7 @@ def __build_hierarchy(hierarchy, path, command):
         hierarchy[path] = collections.OrderedDict([('this', command)])
 
 
-def __get_commands(command_path):
+def __get_commands(command_paths):
     """
         Reads the folder sub-structure of hepshell/commands and
         returns all found modules that contain a Command class.
@@ -93,32 +94,33 @@ def __get_commands(command_path):
     import collections
     commands = collections.OrderedDict()
     hierarchy = collections.OrderedDict()
-    for p, _, _ in sorted(os.walk(command_path)):
-        relative_path = os.path.relpath(p, command_path)
-        # If it's the current directory, ignore
-        if relative_path == '.':
-            continue
-        # Convert directory structure to module path
-        relative_path = relative_path.replace('/', '.')
-        absolute_path = '{0}.{1}'.format(BASE_MODULE, relative_path)
-        try:
-            if sys.version_info < (2, 7):
-                mod = import_module(absolute_path, fromlist=['Command'])
-            else:
-                mod = import_module(absolute_path)
-            if hasattr(mod, 'Command'):
-                if type(mod.Command) is type(object):
-                    commands[relative_path] = mod.Command
-                    __build_hierarchy(hierarchy, relative_path, mod.Command)
-        except ImportError:
-            import traceback
-            LOG.error('Could not import {0}'.format(absolute_path))
-            LOG.error(traceback.format_exc())
-            continue
+    for command_path in command_paths:
+        for p, _, _ in sorted(os.walk(command_path)):
+            relative_path = os.path.relpath(p, command_path)
+            # If it's the current directory, ignore
+            if relative_path == '.':
+                continue
+            # Convert directory structure to module path
+            relative_path = relative_path.replace('/', '.')
+            absolute_path = '{0}.{1}'.format(BASE_MODULE, relative_path)
+            try:
+                if sys.version_info < (2, 7):
+                    mod = import_module(absolute_path, fromlist=['Command'])
+                else:
+                    mod = import_module(absolute_path)
+                if hasattr(mod, 'Command'):
+                    if type(mod.Command) is type(object):
+                        commands[relative_path] = mod.Command
+                        __build_hierarchy(hierarchy, relative_path, mod.Command)
+            except ImportError:
+                import traceback
+                LOG.error('Could not import {0}'.format(absolute_path))
+                LOG.error(traceback.format_exc())
+                continue
 
     return commands, hierarchy
 
-COMMANDS, HIERARCHY = __get_commands(COMMAND_PATH)
+COMMANDS, HIERARCHY = __get_commands(COMMAND_PATHS)
 
 
 def __traverse(commands, tokens, incomplete, results=[]):
@@ -233,7 +235,7 @@ def _find_command_and_args(cli_input):
     return command, args
 
 
-def run_cli(prompt=PROMPT):
+def run_cli(prompt='hep > '):
     """ sets up command line interface"""
 
     readline.set_completer(__complete)

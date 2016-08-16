@@ -3,7 +3,7 @@ import os
 import sys
 import logging
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 current_path = os.path.split(__file__)[0]
 path_to_base = os.path.join(current_path, '..')
 __path__.append(path_to_base)
@@ -13,6 +13,15 @@ if not 'HEP_PROJECT_ROOT' in os.environ:
     print("You need to run 'source bin/env.sh' first!")
     sys.exit(-1)
 HEP_PROJECT_ROOT = os.environ['HEP_PROJECT_ROOT']
+
+USE_HEPSHELL_COMMANDS = os.getenv('USE_HEPSHELL_COMMANDS', 0)
+HEP_PROJECT_COMMANDS = os.getenv(
+    'HEP_PROJECT_COMMANDS', '')
+COMMAND_PATHS = []
+if USE_HEPSHELL_COMMANDS:
+    COMMAND_PATHS.append(os.path.join(current_path, 'commands'))
+if HEP_PROJECT_COMMANDS:
+    COMMAND_PATHS.append(HEP_PROJECT_COMMANDS)
 
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.DEBUG)

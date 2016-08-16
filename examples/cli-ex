@@ -29,5 +29,5 @@ if len(sys.argv) == 1:
         hepshell.run_cli('{0} > '.format(name_of_this_script))
 else:
     args = sys.argv[1:]
-    rc = custom_python_shell.run_command(args)
+    rc = hepshell.run_command(args)
     sys.exit(rc)

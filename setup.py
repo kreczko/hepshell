@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name='hepshell',
-    version='0.1.0',
+    version='0.1.1',
     description='A Python Shell for High Energy Particle Physics',
     author='Luke Kreczko',
     author_email='lkreczko@gmail.com',
