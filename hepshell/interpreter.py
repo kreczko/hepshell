@@ -16,16 +16,23 @@ try:
 except:
     import_module = __import__
 
-from hepshell import COMMAND_PATHS
 
 HISTFILE = os.path.expanduser('~/.hepshell_history')
 LOGFILE = os.path.expanduser('~/.hepshell_log')
 COMPLETEKEY = 'tab'
 
 CURRENT_PATH = os.path.split(__file__)[0]
-COMMAND_PATH = os.path.join(CURRENT_PATH, 'commands')
-
 PATH_TO_BASE = os.path.join(CURRENT_PATH, '..')
+
+USE_HEPSHELL_COMMANDS = os.getenv('USE_HEPSHELL_COMMANDS', 0)
+HEP_PROJECT_COMMANDS = os.getenv(
+    'HEP_PROJECT_COMMANDS', '')
+COMMAND_PATHS = []
+if USE_HEPSHELL_COMMANDS:
+    COMMAND_PATHS.append(os.path.join(CURRENT_PATH, 'commands'))
+if HEP_PROJECT_COMMANDS:
+    COMMAND_PATHS.append(HEP_PROJECT_COMMANDS)
+
 BASE_MODULE = 'hepshell.commands'
 
 

@@ -14,15 +14,6 @@ if not 'HEP_PROJECT_ROOT' in os.environ:
     sys.exit(-1)
 HEP_PROJECT_ROOT = os.environ['HEP_PROJECT_ROOT']
 
-USE_HEPSHELL_COMMANDS = os.getenv('USE_HEPSHELL_COMMANDS', 0)
-HEP_PROJECT_COMMANDS = os.getenv(
-    'HEP_PROJECT_COMMANDS', '')
-COMMAND_PATHS = []
-if USE_HEPSHELL_COMMANDS:
-    COMMAND_PATHS.append(os.path.join(current_path, 'commands'))
-if HEP_PROJECT_COMMANDS:
-    COMMAND_PATHS.append(HEP_PROJECT_COMMANDS)
-
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.DEBUG)
 # logging to a file
