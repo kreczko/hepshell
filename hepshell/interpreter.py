@@ -1,9 +1,7 @@
 from __future__ import print_function
 import readline
-import string
 import os
 import shlex
-import types
 import sys
 import logging
 import select

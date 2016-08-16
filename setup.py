@@ -3,10 +3,10 @@
 from distutils.core import setup
 
 setup(
-    name='Distutils',
-    version='1.0',
-    description='Python Distribution Utilities',
+    name='hepshell',
+    version='0.1.0',
+    description='A Python Shell for High Energy Particle Physics',
     author='Luke Kreczko',
     author_email='lkreczko@gmail.com',
-    packages=['distutils', 'distutils.command'],
+    packages=['hepshell', 'hepshell.commands'],
 )
