@@ -17,7 +17,7 @@ drop_from_path()
 }
 
 if [ -n "${HEP_PROJECT_ROOT}" ] ; then
-   old_ntpbase=${HEP_PROJECT_ROOT}
+   old_projectbase=${HEP_PROJECT_ROOT}
 fi
 
 
@@ -34,13 +34,13 @@ else
     HEP_PROJECT_ROOT=$(cd ${envscript}/..;pwd); export HEP_PROJECT_ROOT
 fi
 
-if [ -n "${old_ntpbase}" ] ; then
+if [ -n "${old_projectbase}" ] ; then
    if [ -n "${PATH}" ]; then
-      drop_from_path "$PATH" ${old_ntpbase}/bin
+      drop_from_path "$PATH" ${old_projectbase}/bin
       PATH=$newpath
    fi
    if [ -n "${PYTHONPATH}" ]; then
-      drop_from_path $PYTHONPATH ${old_ntpbase}/python
+      drop_from_path $PYTHONPATH ${old_projectbase}/python
       PYTHONPATH=$newpath
    fi
 fi
@@ -56,3 +56,6 @@ if [ -z "${PYTHONPATH}" ]; then
 else
    PYTHONPATH=$HEP_PROJECT_ROOT/python:$PYTHONPATH; export PYTHONPATH
 fi
+
+unset old_projectbase
+unset envscript

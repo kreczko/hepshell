@@ -16,15 +16,14 @@ drop_from_path()
                           -e "s;${drop};;g"`
 }
 
-
 if [ -n "${HEP_PROJECT_ROOT}" ] ; then
-   old_ntpbase=${HEP_PROJECT_ROOT}
+   old_projectbase=${HEP_PROJECT_ROOT}
 fi
 
 
 if [ "x${BASH_ARGV[0]}" = "x" ]; then
     if [ ! -f bin/env.sh ]; then
-        echo ERROR: must "cd where/NTupleProdcution/is" before calling ". bin/env.sh" for this version of bash!
+        echo ERROR: must "cd where/project/is" before calling ". bin/env.sh" for this version of bash!
         HEP_PROJECT_ROOT=; export HEP_PROJECT_ROOT
         return 1
     fi
@@ -35,17 +34,16 @@ else
     HEP_PROJECT_ROOT=$(cd ${envscript}/..;pwd); export HEP_PROJECT_ROOT
 fi
 
-if [ -n "${old_ntpbase}" ] ; then
+if [ -n "${old_projectbase}" ] ; then
    if [ -n "${PATH}" ]; then
-      drop_from_path "$PATH" ${old_ntpbase}/bin
+      drop_from_path "$PATH" ${old_projectbase}/bin
       PATH=$newpath
    fi
    if [ -n "${PYTHONPATH}" ]; then
-      drop_from_path $PYTHONPATH ${old_ntpbase}/python
+      drop_from_path $PYTHONPATH ${old_projectbase}/python
       PYTHONPATH=$newpath
    fi
 fi
-
 
 if [ -z "${PATH}" ]; then
    PATH=$HEP_PROJECT_ROOT/bin; export PATH
@@ -58,6 +56,9 @@ if [ -z "${PYTHONPATH}" ]; then
 else
    PYTHONPATH=$HEP_PROJECT_ROOT/python:$PYTHONPATH; export PYTHONPATH
 fi
+
+unset old_projectbase
+unset envscript
 
 # for CMSSW
 if [ -f /cvmfs/cms.cern.ch/cmsset_default.sh ]; then
@@ -72,16 +73,22 @@ if [ -f /cvmfs/cms.cern.ch/crab3/crab.sh ]; then
 fi
 
 # for grid tools
-#source /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh
+if [ -f /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh ]; then
+	#source /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh
+fi
 
-# for hadoop, needs to run after grid tools
-#if [[ -d "/usr/java/jdk1.7.0_67-cloudera" ]]; then
-#	export JAVA_HOME=/usr/java/jdk1.7.0_67-cloudera
-#	export PATH=$JAVA_HOME/bin:$PATH
-#else
-#	# use system default
-#	export JAVA_HOME=
-#fi
+# miniconda setup for modern python and additional python packages
+if [ ! -d "${HEP_PROJECT_ROOT}/external" ] ; then
+	mkdir ${HEP_PROJECT_ROOT}/external
+fi
 
-unset old_ntpbase
-unset envscript
+if [ ! -d "${HEP_PROJECT_ROOT}/external/miniconda" ] ; then
+	wget -nv http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+	bash miniconda.sh -b -p ${HEP_PROJECT_ROOT}/external/miniconda
+	PATH=${HEP_PROJECT_ROOT}/external/miniconda/bin:$PATH; export PATH
+	rm -f miniconda.sh
+	conda update conda -y
+	conda update pip -y
+	pip install -U python-cjson
+	pip install -U git+https://github.com/kreczko/hepshell.git
+fi
