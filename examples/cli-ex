@@ -3,10 +3,7 @@
 from __future__ import print_function
 import os
 import readline
-import string
-import shlex
 import sys
-import types
 import warnings
 
 warnings.filterwarnings("ignore")

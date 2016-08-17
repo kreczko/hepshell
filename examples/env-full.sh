@@ -59,20 +59,17 @@ else
    PYTHONPATH=$HEP_PROJECT_ROOT/python:$PYTHONPATH; export PYTHONPATH
 fi
 
-# for external dependencies
-PYTHONUSERBASE=${HEP_PROJECT_ROOT}/external; export PYTHONUSERBASE
-NEWPP=$(echo "$PYTHONUSERBASE"/lib/python*/site-packages)
-NEWPP=$(echo ${NEWPP// /:})
-PYTHONPATH=$NEWPP:$PYTHONPATH; export PYTHONPATH
-PATH=$PYTHONUSERBASE/bin:$PATH; export PATH
-
 # for CMSSW
-source /cvmfs/cms.cern.ch/cmsset_default.sh
-export CMSSW_GIT_REFERENCE=/cvmfs/cms.cern.ch/cmssw.git
+if [ -f /cvmfs/cms.cern.ch/cmsset_default.sh ]; then
+	source /cvmfs/cms.cern.ch/cmsset_default.sh
+	export CMSSW_GIT_REFERENCE=/cvmfs/cms.cern.ch/cmssw.git
+fi
 
 # CRAB submission
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3Releases#Improvements_enhancements_change
-source /cvmfs/cms.cern.ch/crab3/crab.sh
+if [ -f /cvmfs/cms.cern.ch/crab3/crab.sh ]; then
+	source /cvmfs/cms.cern.ch/crab3/crab.sh
+fi
 
 # for grid tools
 #source /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh
