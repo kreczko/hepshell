@@ -79,7 +79,12 @@ def __build_hierarchy(hierarchy, path, command):
         new_path = ' '.join(elements[1:])
         __build_hierarchy(hierarchy[current], new_path, command)
     else:
-        hierarchy[path] = collections.OrderedDict([('this', command)])
+        # check if such a hepshell command exists
+        if not path in hierarchy:
+            hierarchy[path] = collections.OrderedDict([('this', command)])
+        else:
+            # overwrite the hepshell command with custom one
+            hierarchy[path]['this'] = command
 
 
 def __get_commands(command_paths):
