@@ -6,7 +6,6 @@ commands such as printing help or creating & checking your grid proxy.
 
 
 # Setup
-<TODO>
 
 A typical HEPSHELL project is expected to have the following minimal folder structure:
  - bin (all scripts/executables)
@@ -19,3 +18,7 @@ The name of the file will be used as the prompt prefix for your custom shell
 Furthermore one should add `{project}/bin/env.sh` which sets up the environment.
 At the very least this shell script should define `HEP_PROJECT_ROOT` and update
 the `PATH` and `PYTHONPATH` variables (see `examples/env-minimal.sh`)
+
+# Projects that use hepshell
+ - https://github.com/kreczko/l1t_cli
+ - https://github.com/BristolTopGroup/NTupleProduction
