@@ -73,8 +73,13 @@ if [ -f /cvmfs/cms.cern.ch/crab3/crab.sh ]; then
 fi
 
 # for grid tools
-if [ -f /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh ]; then
-	#source /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh
+vomsInfo=`which voms-proxy-info &> /dev/null`
+if [ "$vomsInfo" = "" ]; then
+  if [ -f /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh ]; then
+	source /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh
+  else
+    echo "Cannot find voms-proxy-info nor setup-cvmfs-ui.sh"
+  fi
 fi
 
 # miniconda setup for modern python and additional python packages
