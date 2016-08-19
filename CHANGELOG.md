@@ -1,5 +1,8 @@
 Quick note: changes marked with [DEV] are only interested for hepshell developers.
 
+# master
+ - fixed typo in `check grid_proxy` command
+
 # version 0.1.3
  - fixed "hidden" commands (issue #1)
  - added CHANGELOG.md

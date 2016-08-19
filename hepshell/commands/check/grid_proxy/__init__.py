@@ -41,7 +41,7 @@ class Command(C):
     def run(self, args, variables):
         self.__prepare(args, variables)
         from hepshell.interpreter import call
-        proxy = get_x509_proxy.x509()
+        proxy = get_x509_proxy()
         is_valid = os.path.isfile(proxy)
         time_left = 0
 
