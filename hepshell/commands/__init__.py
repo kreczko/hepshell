@@ -57,7 +57,7 @@ class Command(object):
         for name, value in variables.items():
             if name in variables:
                 self.__variables[name] = value
-    
+
     def __prepare(self, args, variables):
         self.__set_variables(variables)
         self.__parse_arguments(args)
@@ -82,3 +82,20 @@ class Command(object):
         # more than 30min time left
         is_valid = is_valid and timeleft_in_minutes > 30
         return is_valid
+
+    def __extract_additional_parameters(self, prefix='', skip=[]):
+        """
+            Searches through given parameters and extracts unknown (not defined
+            in DEFAULTS dictionary) ones. These are then treated as additional
+            parameters that can be used for a shell command.
+
+            @param prefix: determines how paremeters are constructed. Usually
+                           either empty or '--'
+            @param skip: list of parameters to be skipped
+        """
+        args = []
+        for p, value in self.__variables.items():
+            if p in self.DEFAULTS or p in skip:
+                continue
+            args.append('{0}{1}={2}'.format(prefix, p, value))
+        return ' '.join(args)

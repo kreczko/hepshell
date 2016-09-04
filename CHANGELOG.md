@@ -1,7 +1,8 @@
 Quick note: changes marked with [DEV] are only interested for hepshell developers.
 
 # master
-
+ - [DEV] added Command.__extract_additional_parameters
+ 
 # version 0.1.4
  - fixed typo in `check grid_proxy` command
  - [DEV] added tests
