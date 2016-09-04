@@ -21,6 +21,7 @@ class Command(object):
         self.__doc = doc
         self.__text = ''
         self.__variables = copy.deepcopy(self.DEFAULTS)
+        self.__args = []
         self.__results = {}
 
     def __can_run(self):
@@ -42,8 +43,9 @@ class Command(object):
         else:
             return 'Documentation for command "{0}" is missing'.format(self.__name)
 
-    def parse_arguments(self, name, argv):
-        pass
+    def __parse_arguments(self, args):
+        """ This function is command specific """
+        self.__args = args
 
     def get_text(self):
         return self.__text
@@ -55,9 +57,10 @@ class Command(object):
         for name, value in variables.items():
             if name in variables:
                 self.__variables[name] = value
-
+    
     def __prepare(self, args, variables):
         self.__set_variables(variables)
+        self.__parse_arguments(args)
         if self.REQUIRE_GRID_CERT:
             if not self.__has_valid_proxy():
                 self.__create_proxy()
