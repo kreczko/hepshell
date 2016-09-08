@@ -1,6 +1,7 @@
 Quick note: changes marked with [DEV] are only interested for hepshell developers.
 
 # master
+ - fixed issue #2: better `interpreter.call` for commands that require inputs
 
 # 0.1.5
  - [DEV] added Command.__extract_additional_parameters

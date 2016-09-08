@@ -297,16 +297,19 @@ def run_command(args):
     return __execute(command, parameters, variables)
 
 
-def call(cmd_and_args, logger, stdout_log_level=logging.DEBUG, stderr_log_level=logging.ERROR, **kwargs):
+def __call_with_redirection(cmd_and_args, logger, stdout_log_level=logging.DEBUG, stderr_log_level=logging.ERROR, **kwargs):
     """
     Variant of subprocess.call that accepts a logger instead of stdout/stderr,
     and logs stdout messages via logger.debug and stderr messages via
     logger.error.
     From: https://gist.github.com/bgreenlee/1402841
     """
-    logger.debug('executing: {0}'.format(cmd_and_args))
-    child = subprocess.Popen(cmd_and_args, stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE, **kwargs)
+    msg = 'executing: {0}'.format(cmd_and_args)
+    if not isinstance(cmd_and_args, basestring):
+        msg = 'executing: {0}'.format(' '.join(cmd_and_args))
+    logger.debug(msg)
+    child = subprocess.Popen(
+        cmd_and_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
 
     log_level = {child.stdout: stdout_log_level,
                  child.stderr: stderr_log_level}
@@ -319,8 +322,9 @@ def call(cmd_and_args, logger, stdout_log_level=logging.DEBUG, stderr_log_level=
             [child.stdout, child.stderr], [], [], 1)[0]
         for io in ready_to_read:
             line = io.readline()
-            outputs[io] += line[:-1]
-            logger.log(log_level[io], line[:-1])
+            if line:  # skip empty lines
+                outputs[io] += line[:-1]
+                logger.log(log_level[io], line[:-1])
 
     # keep checking stdout/stderr until the child exits
     while child.poll() is None:
@@ -340,3 +344,28 @@ def call(cmd_and_args, logger, stdout_log_level=logging.DEBUG, stderr_log_level=
         stdout = stderr
 
     return return_code, stdout, stderr
+
+
+def __call_no_redirection(cmd_and_args, logger, **kwargs):
+    msg = 'executing: {0}'.format(cmd_and_args)
+    if not isinstance(cmd_and_args, basestring):
+        msg = 'executing: {0}'.format(' '.join(cmd_and_args))
+    logger.debug(msg)
+    return_code = subprocess.call(cmd_and_args, **kwargs)
+
+    return return_code, None, None
+
+
+def call(cmd_and_args, logger, redirect=True, **kwargs):
+    """
+        Calls an external command using subprocess.Popen
+        @param cmd_and_args: the command wtih arguments and parameters
+        @param logger: the logger instance to use for output redirection
+        @param redirect: if output should be redirected to the logger.
+                         Default: True
+        Using 'redirect=False' is useful for commands that require input
+    """
+    if redirect:
+        return __call_with_redirection(cmd_and_args, logger, **kwargs)
+    else:
+        return __call_no_redirection(cmd_and_args, logger, **kwargs)

@@ -32,14 +32,11 @@ class Command(C):
 
     def run(self, args, variables):
         self.__prepare(args, variables)
-        from hepshell.interpreter import call
         vo = self.__variables['vo']
         hours = str(self.__variables['hours'])
         command = ['voms-proxy-init', '-voms', vo, '-hours', hours]
-        call(
-            ' '.join(command),
-            logger=LOG,
-            shell=True,
-        )
+
+        from hepshell.interpreter import call
+        call(command, logger=LOG, shell=True, redirect=False)
 
         return True
