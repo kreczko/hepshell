@@ -226,16 +226,22 @@ def _convert(value):
 
 
 def _parse_args(args):
+    PARAM_TOKEN = '--'
     positional_args = []
-    variables = {}
+    parameters = {}
     for arg in args:
+        is_param = '=' in arg or arg.startswith(PARAM_TOKEN)
+        if not is_param:
+            positional_args.append(arg)
+        if arg.startswith(PARAM_TOKEN):
+            arg = arg.lstrip(PARAM_TOKEN)
         if '=' in arg:
             name, value = arg.split('=')
 
-            variables[name] = _convert(value)
-        else:
-            positional_args.append(arg)
-    return positional_args, variables
+            parameters[name] = _convert(value)
+        else:  # assume flag == True
+            parameters[arg] = True
+    return positional_args, parameters
 
 
 def _find_command_and_args(cli_input):

@@ -1,7 +1,11 @@
 Quick note: changes marked with [DEV] are only interested for hepshell developers.
 
 # master
+
+# 0.1.5
  - [DEV] added Command.__extract_additional_parameters
+ - parameters of type `--name=value` are now allowed
+ - parameters of type `--name` are interpreted as flags (identical to `--name=1`
  
 # version 0.1.4
  - fixed typo in `check grid_proxy` command
