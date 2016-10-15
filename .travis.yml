@@ -8,6 +8,6 @@ python:
   - "3.5"
 
 # Install for testing
-install: "pip install -U ."
+before_script: "pip install -U ."
 # Test
 script: nosetest -v
