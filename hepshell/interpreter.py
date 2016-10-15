@@ -21,21 +21,6 @@ HISTFILE = os.path.expanduser('~/.hepshell_history')
 LOGFILE = os.path.expanduser('~/.hepshell_log')
 COMPLETEKEY = 'tab'
 
-CURRENT_PATH = os.path.split(__file__)[0]
-PATH_TO_BASE = os.path.join(CURRENT_PATH, '..')
-
-USE_HEPSHELL_COMMANDS = os.getenv('USE_HEPSHELL_COMMANDS', 0)
-HEP_PROJECT_COMMANDS = os.getenv(
-    'HEP_PROJECT_COMMANDS', '')
-HEP_PROJECT_BASE_MODULE = os.getenv('HEP_PROJECT_BASE_MODULE', '')
-COMMAND_PATHS = []
-if USE_HEPSHELL_COMMANDS:
-    COMMAND_PATHS.append(os.path.join(CURRENT_PATH, 'commands'))
-if HEP_PROJECT_COMMANDS:
-    COMMAND_PATHS.append(HEP_PROJECT_COMMANDS)
-
-BASE_MODULE = 'hepshell.commands'
-
 
 def time_function(name, logger):
     def _time_function(function):
@@ -87,7 +72,19 @@ def __build_hierarchy(hierarchy, path, command):
             hierarchy[path]['this'] = command
 
 
-def __get_commands(command_paths):
+def __get_command_modules_and_paths():
+    from . import settings
+    for cmd in settings.COMMANDS:
+        try:
+            mod = import_module(cmd)
+        except ImportError:
+            LOG.error('Could not import {0}'.format(cmd))
+            continue
+        location = os.path.dirname(os.path.abspath(mod.__file__))
+        yield cmd, location
+
+
+def __get_commands():
     """
         Reads the folder sub-structure of hepshell/commands and
         returns all found modules that contain a Command class.
@@ -107,16 +104,15 @@ def __get_commands(command_paths):
     import collections
     commands = collections.OrderedDict()
     hierarchy = collections.OrderedDict()
-    for command_path in command_paths:
-        for p, _, _ in sorted(os.walk(command_path)):
-            relative_path = os.path.relpath(p, command_path)
+    for module, path in __get_command_modules_and_paths():
+        for p, _, _ in sorted(os.walk(path)):
+            relative_path = os.path.relpath(p, path)
             # If it's the current directory, ignore
             if relative_path == '.':
                 continue
             # Convert directory structure to module path
             relative_path = relative_path.replace('/', '.')
-            base_module = BASE_MODULE if 'hepshell' in command_path else HEP_PROJECT_BASE_MODULE
-            absolute_path = '{0}.{1}'.format(base_module, relative_path)
+            absolute_path = '{0}.{1}'.format(module, relative_path)
             try:
                 if sys.version_info < (2, 7):
                     mod = import_module(absolute_path, fromlist=['Command'])
@@ -135,20 +131,7 @@ def __get_commands(command_paths):
 
     return commands, hierarchy
 
-
-def __get_command_paths():
-    from . import settings
-    for cmd in settings.COMMANDS:
-        try:
-            mod = import_module(cmd)
-        except ImportError:
-            LOG.error('Could not import {0}'.format(cmd))
-            continue
-        location = os.path.dirname(os.path.abspath(mod.__file__))
-        yield location
-
-
-COMMANDS, HIERARCHY = __get_commands(__get_command_paths())
+COMMANDS, HIERARCHY = __get_commands()
 
 
 def __traverse(commands, tokens, incomplete, results=[]):
