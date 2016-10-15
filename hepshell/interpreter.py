@@ -135,7 +135,20 @@ def __get_commands(command_paths):
 
     return commands, hierarchy
 
-COMMANDS, HIERARCHY = __get_commands(COMMAND_PATHS)
+
+def __get_command_paths():
+    from . import settings
+    for cmd in settings.COMMANDS:
+        try:
+            mod = import_module(cmd)
+        except ImportError:
+            LOG.error('Could not import {0}'.format(cmd))
+            continue
+        location = os.path.dirname(os.path.abspath(mod.__file__))
+        yield location
+
+
+COMMANDS, HIERARCHY = __get_commands(__get_command_paths())
 
 
 def __traverse(commands, tokens, incomplete, results=[]):
