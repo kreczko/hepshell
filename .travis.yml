@@ -1,11 +1,14 @@
 language: python
 python:
-  - "2.6"
   - "2.7"
   - "3.4"
   - "3.5"
 
-# Install for testing
-before_script: "pip install -U ."
-# Test
-script: nosetests -v
+before_script:
+  - python setup.py develop
+  - export HEP_PROJECT_ROOT=$PWD
+  - python -c 'import hepshell'
+
+
+script: 
+  - nosetests -v
