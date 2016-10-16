@@ -73,8 +73,8 @@ def __build_hierarchy(hierarchy, path, command):
 
 
 def __get_command_modules_and_paths():
-    from . import settings
-    for cmd in settings.COMMANDS:
+    from . import SETTINGS
+    for cmd in SETTINGS.COMMANDS:
         try:
             mod = import_module(cmd)
         except ImportError:

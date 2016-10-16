@@ -1,6 +1,8 @@
 Quick note: changes marked with [DEV] are only interested for hepshell developers.
 
 # master
+ - Moved `hepshell.commands.Command` to `hepshell.Command` and adjusted the imports
+ - added `requirements.txt` for easier install
  - added `hepshell.settings` (see issue #3)
  - fixed issue #2: better `interpreter.call` for commands that require inputs
 
