@@ -15,12 +15,12 @@
               
 """
 import logging
-from .. import Command as C
+import hepshell
 
 LOG = logging.getLogger(__name__)
 
 
-class Command(C):
+class Command(hepshell.Command):
 
     DEFAULTS = {
         'vo': 'cms',

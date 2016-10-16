@@ -38,15 +38,23 @@ else:
 ch.setFormatter(formatter)
 LOG.addHandler(ch)
 
+from . import settings as SETTINGS
+
+from . import command
+Command = command.Command
+
+
 from . import interpreter
 run_cli = interpreter.run_cli
 run_command = interpreter.run_command
 
-from . import settings as SETTINGS
+
+
 
 __all__ = [
     'interpreter',
     'run_cli',
     'run_command',
     'SETTINGS',
+    'Command',
 ]

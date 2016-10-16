@@ -5,11 +5,11 @@
                 help [command]
 """
 from __future__ import print_function
-from .. import Command as C
+import hepshell
 import textwrap
 
 
-class Command(C):
+class Command(hepshell.Command):
 
     def __init__(self, path=__file__, doc=__doc__):
         super(Command, self).__init__(path, doc)

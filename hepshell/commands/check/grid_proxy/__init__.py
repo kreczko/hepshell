@@ -8,7 +8,7 @@
 import logging
 import os
 import pwd
-from .. import Command as C
+import hepshell
 
 LOG = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ def get_x509_proxy():
             return ''
     return proxy
 
-class Command(C):
+class Command(hepshell.Command):
 
     DEFAULTS = {
         'vo': 'cms',
