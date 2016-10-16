@@ -14,7 +14,7 @@ if not 'HEP_PROJECT_ROOT' in os.environ:
     sys.exit(-1)
 HEP_PROJECT_ROOT = os.environ['HEP_PROJECT_ROOT']
 
-LOG = logging.getLogger(__name__)
+LOG = logging.getLogger('hepshell')
 LOG.setLevel(logging.DEBUG)
 # logging to a file
 formatter = logging.Formatter(
@@ -38,7 +38,15 @@ else:
 ch.setFormatter(formatter)
 LOG.addHandler(ch)
 
-from .interpreter import run_cli
-from .interpreter import run_command
+from . import interpreter
+run_cli = interpreter.run_cli
+run_command = interpreter.run_command
 
-__all__ = ['interpreter', 'run_cli', 'run_command']
+from . import settings as SETTINGS
+
+__all__ = [
+    'interpreter',
+    'run_cli',
+    'run_command',
+    'SETTINGS',
+]

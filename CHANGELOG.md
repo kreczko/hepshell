@@ -1,6 +1,7 @@
 Quick note: changes marked with [DEV] are only interested for hepshell developers.
 
 # master
+ - added `hepshell.settings` (see issue #3)
  - fixed issue #2: better `interpreter.call` for commands that require inputs
 
 # 0.1.5
