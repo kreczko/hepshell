@@ -1,4 +1,7 @@
 import os
+import logging
+
+LOG = logging.getLogger(__name__)
 
 '''
     List of modules which should be loaded as commands for hepshell
@@ -18,4 +21,6 @@ for key in os.environ:
 try:
     from hepshell_settings import *
 except ImportError:
+    LOG.warning('Could not locate hepshell settings')
     pass
+    
