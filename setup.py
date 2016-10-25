@@ -36,6 +36,11 @@ setup(
     version=find_version("hepshell", "__init__.py"),
     description='A Python Shell for High Energy Particle Physics',
     long_description=long_description,
+    install_requires=[
+        'luigi'
+    ],
+
+    tests_require=['nose'],
 
     # The project's main homepage.
     url='https://github.com/kreczko/hepshell',
