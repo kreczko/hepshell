@@ -1,6 +1,10 @@
 Quick note: changes marked with [DEV] are only interested for hepshell developers.
 
 # master
+
+# 0.1.6
+ - added travis tests (#5)
+ - added support for arbitrary command modules (#3)
  - Moved `hepshell.commands.Command` to `hepshell.Command` and adjusted the imports
  - added `requirements.txt` for easier install
  - added `hepshell.settings` (see issue #3)
@@ -10,7 +14,7 @@ Quick note: changes marked with [DEV] are only interested for hepshell developer
  - [DEV] added Command.__extract_additional_parameters
  - parameters of type `--name=value` are now allowed
  - parameters of type `--name` are interpreted as flags (identical to `--name=1`
- 
+
 # version 0.1.4
  - fixed typo in `check grid_proxy` command
  - [DEV] added tests
@@ -22,7 +26,7 @@ Quick note: changes marked with [DEV] are only interested for hepshell developer
 
 # version 0.1.2
  - [DEV] automatic version lookup for setup.py
- 
+
 # version 0.1.1
  - fixed examples mentioning a specific program
  - added miniconda to full env.sh example
@@ -30,7 +34,6 @@ Quick note: changes marked with [DEV] are only interested for hepshell developer
  - added CVMFS checks for env.sh examples
  - added `check grid_proxy`
  - added new feature: external commands
- 
+
 # version 0.1.0
  - initial port & examples
- 

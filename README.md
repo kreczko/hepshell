@@ -1,6 +1,9 @@
 # hepshell
+
+[![Build Status](https://travis-ci.org/kreczko/hepshell.svg?branch=master)](https://travis-ci.org/kreczko/hepshell)
+
 A Python Shell for High Energy Particle Physics.
-hepshell is meant as a starting point for creating your own analysis shell. 
+hepshell is meant as a starting point for creating your own analysis shell.
 It provides auto-completion (in shell mode), command execution and a few basic
 commands such as printing help or creating & checking your grid proxy.
 
