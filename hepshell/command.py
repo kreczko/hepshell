@@ -14,7 +14,7 @@ class Command(object):
         current_path = os.path.split(path)[0]
         parent_folder = current_path.split("/")[-1]
         if parent_folder == 'commands':
-            self.__name = 'ntp'
+            self.__name = 'hep'
         else:
             self.__name = parent_folder
         self.__doc = doc

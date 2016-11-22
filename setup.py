@@ -1,5 +1,6 @@
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
+from pip.req import parse_requirements
 
 # To use a consistent encoding
 from codecs import open
@@ -8,10 +9,15 @@ import re
 import io
 
 here = os.path.abspath(os.path.dirname(__file__))
+install_reqs = parse_requirements(
+    os.path.join(here, 'requirements.txt'), session='hack')
+reqs = [str(ir.req) for ir in install_reqs]
+
 
 # Get the long description from the README file
 with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
+
 
 def read(*names, **kwargs):
     with io.open(
@@ -19,6 +25,7 @@ def read(*names, **kwargs):
         encoding=kwargs.get("encoding", "utf8")
     ) as fp:
         return fp.read()
+
 
 def find_version(*file_paths):
     version_file = read(*file_paths)
@@ -36,6 +43,7 @@ setup(
     version=find_version("hepshell", "__init__.py"),
     description='A Python Shell for High Energy Particle Physics',
     long_description=long_description,
+    install_requires=reqs,
 
     # The project's main homepage.
     url='https://github.com/kreczko/hepshell',
