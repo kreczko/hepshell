@@ -187,7 +187,8 @@ def __complete(text, state):
 def __execute(command, parameters, variables):
     rc = False
     try:
-        rc = command.run(parameters, variables)
+        command.prepare(parameters, variables)
+        rc = command.run(command.parameters, command.variables)
     except Exception:
         import traceback
         LOG.error('Command failed: ' + traceback.format_exc())

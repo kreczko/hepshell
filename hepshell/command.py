@@ -10,6 +10,9 @@ class Command(object):
     REQUIRE_GRID_CERT = False
     DEFAULTS = {}
 
+    args = []
+    variables = {}
+
     def __init__(self, path=__file__, doc=__doc__):
         current_path = os.path.split(path)[0]
         parent_folder = current_path.split("/")[-1]
@@ -63,6 +66,14 @@ class Command(object):
         if self.REQUIRE_GRID_CERT:
             if not self.__has_valid_proxy():
                 self.__create_proxy()
+
+    def prepare(self, args, variables):
+        '''
+            Future replacement for __prepare
+        '''
+        self.__prepare(args, variables)
+        self.args = self.__args
+        self.variables = self.__variables
 
     def results(self):
         return self.__results
