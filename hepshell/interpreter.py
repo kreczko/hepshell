@@ -188,7 +188,7 @@ def __execute(command, parameters, variables):
     rc = False
     try:
         command.prepare(parameters, variables)
-        rc = command.run(command.parameters, command.variables)
+        rc = command.run(command.args, command.variables)
     except Exception:
         import traceback
         LOG.error('Command failed: ' + traceback.format_exc())
