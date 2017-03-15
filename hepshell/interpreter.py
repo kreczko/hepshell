@@ -222,7 +222,7 @@ def _convert(value):
     return value
 
 
-def _parse_args(args):
+def _parse_args(args,command):
     PARAM_TOKEN = '--'
     positional_args = []
     parameters = {}
@@ -234,8 +234,9 @@ def _parse_args(args):
             arg = arg.lstrip(PARAM_TOKEN)
         if '=' in arg:
             name, value = arg.split('=')
-
             parameters[name] = _convert(value)
+        elif hasattr(command,"DEFAULTS") and arg in command.DEFAULTS:
+            parameters[arg]=command.DEFAULTS[arg]
         else:  # assume flag == True
             parameters[arg] = True
     return positional_args, parameters
@@ -282,12 +283,12 @@ def run_command(args):
         return
 
     command, arguments = _find_command_and_args(args)
-    parameters, variables = _parse_args(arguments)
-
     if command is None:
         LOG.error('Invalid command "{0}"'.format(args[0]))
         LOG.info('Known commands:\n' + '\n '.join(COMMANDS.keys()))
         return -1
+    parameters, variables = _parse_args(arguments,command)
+
 
     # log command
     # execute
