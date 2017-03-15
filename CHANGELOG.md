@@ -3,6 +3,7 @@ Quick note: changes marked with [DEV] are only interested for hepshell developer
 # master
 
 # 0.1.6
+ - fixed issue #14
  - added travis tests (#5)
  - added support for arbitrary command modules (#3)
  - Moved `hepshell.commands.Command` to `hepshell.Command` and adjusted the imports
