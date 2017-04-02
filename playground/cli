@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+#from __future__ import print_function
+import click
+
+@click.group()
+def cli():
+    pass
+
+
+# @click.option('--count', default=1, help='Number of greetings.')
+# @click.option('--name', prompt='Your name', help='The person to greet')
+@cli.command()
+@click.argument('files',nargs=-1, type=click.Path(exists=True))
+def hello(files):
+    for f in files:
+        click.echo(f)
+
+@cli.command()
+def dropdb():
+    click.echo('Dropped the database')
+
+#import hepshell
+
+cli()
