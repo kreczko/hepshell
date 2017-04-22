@@ -20,7 +20,7 @@ except:
 HISTFILE = os.path.expanduser('~/.hepshell_history')
 LOGFILE = os.path.expanduser('~/.hepshell_log')
 COMPLETEKEY = 'tab'
-
+COMMANDS, HIERARCHY = {}, {}
 
 def time_function(name, logger):
     def _time_function(function):
@@ -131,8 +131,6 @@ def __get_commands():
 
     return commands, hierarchy
 
-COMMANDS, HIERARCHY = __get_commands()
-
 
 def __traverse(commands, tokens, incomplete, results=[]):
     """
@@ -242,6 +240,9 @@ def _parse_args(args):
 
 
 def _find_command_and_args(cli_input):
+    global COMMANDS, HIERARCHY
+    if not COMMANDS:
+        COMMANDS, HIERARCHY = __get_commands()
     command = None
     args = []
     for i in range(len(cli_input), 0, -1):

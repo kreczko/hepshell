@@ -4,9 +4,6 @@ import sys
 import logging
 
 __version__ = '0.1.6'
-current_path = os.path.split(__file__)[0]
-path_to_base = os.path.join(current_path, '..')
-__path__.append(path_to_base)
 
 if not 'HEP_PROJECT_ROOT' in os.environ:
     print("Could not find environmental variable 'HEP_PROJECT_ROOT'")
