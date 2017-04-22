@@ -7,18 +7,32 @@ def cli():
     pass
 
 
+
+@cli.command()
 # @click.option('--count', default=1, help='Number of greetings.')
 # @click.option('--name', prompt='Your name', help='The person to greet')
-@cli.command()
+@click.option('-n', default=False, help='do nothing', type=bool)
 @click.argument('files',nargs=-1, type=click.Path(exists=True))
-def hello(files):
+@click.pass_context
+def hello(ctx, files, n):
+    click.echo(n)
     for f in files:
         click.echo(f)
+    # ctx.forward(dropdb)
+    ctx.invoke(dropdb)
 
 @cli.command()
 def dropdb():
+    '''
+        This is some help text
+
+        Lets see
+    '''
     click.echo('Dropped the database')
 
-#import hepshell
+@cli.command()
+class C1:
+    def __call__():
+        click.echo("I'm a command")
 
 cli()
