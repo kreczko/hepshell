@@ -40,3 +40,60 @@ To use the completion feature of the hepshell you need to enter the shell mode:
 # Projects that use hepshell
  - https://github.com/kreczko/l1t_cli
  - https://github.com/BristolTopGroup/NTupleProduction
+
+
+# Under construction
+Refers to future documentation
+
+## installing hepshell
+```
+pip install hepshell
+```
+
+## Using hepshell
+```
+hep test command
+```
+
+## Custom shell
+In your project
+ - create executable bin/<shell name>
+```python
+#!/usr/bin/env python
+import os
+import sys
+
+# adjust paths
+current_path = os.path.split(__file__)[0]
+path_to_base = os.path.join(current_path, '..')
+path_to_base = os.path.abspath(path_to_base)
+sys.path.append(path_to_base)
+
+# this is not save in production environemnt
+# set HEP_PROJECT_ROOT externally instead
+os.environ['HEP_PROJECT_ROOT'] = path_to_base
+
+import hepshell
+# specify which command packages to use
+hepshell.settings.COMMANDS = [
+    'hepshell.commands.core',
+    'hepshell.commands.grid',
+    'hepshell.commands.exp.cms',
+    'hepshell.commands.exp.atlas',
+    'hepshell.commands.exp.lz',
+    'mypackage.commands.thisone',
+]
+
+if len(sys.argv) == 1:
+    if not sys.stdout.isatty():
+        rc = hepshell.run_command(['help'])
+        sys.exit(rc)
+    else:
+        os.environ['TERM'] = 'vt100'
+        name_of_this_script = os.path.basename(sys.argv[0])
+        hepshell.run_cli('{0} > '.format(name_of_this_script))
+else:
+    args = sys.argv[1:]
+    rc = hepshell.run_command(args)
+    sys.exit(rc)
+```
