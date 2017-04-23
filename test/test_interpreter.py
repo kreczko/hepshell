@@ -4,6 +4,9 @@ os.environ['HEP_PROJECT_ROOT'] = ''
 os.environ['USE_HEPSHELL_COMMANDS'] = '1'
 import hepshell
 
+hepshell.SETTINGS.COMMANDS = [
+    'hepshell.commands',
+]
 
 class TestInterpreter(unittest.TestCase):
 
