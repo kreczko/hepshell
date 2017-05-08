@@ -6,7 +6,11 @@ from collections import namedtuple
 COMMANDS = [
     # 'hepshell.commands'
 ]
+INTERPRETERS = namedtuple('Interpreters', ['CLICK_BASED', 'LEGACY'])(
+    'CLICK_BASED', 'legacy')
 
+#
+INTERPRETER = INTERPRETERS.CLICK_BASED
 
 LOG = {
     'name': 'hepshell',

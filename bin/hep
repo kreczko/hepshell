@@ -16,6 +16,7 @@ import hepshell
 hepshell.SETTINGS.COMMANDS = [
     'hepshell.commands'
 ]
+hepshell.SETTINGS.INTERPRETER = hepshell.SETTINGS.INTERPRETERS.LEGACY
 
 if len(sys.argv) == 1:
     if not sys.stdout.isatty():
