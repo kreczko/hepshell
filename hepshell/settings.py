@@ -6,6 +6,8 @@ from collections import namedtuple
 COMMANDS = [
     # 'hepshell.commands'
 ]
+
+PLUGINS = COMMANDS
 INTERPRETERS = namedtuple('Interpreters', ['CLICK_BASED', 'LEGACY'])(
     'CLICK_BASED', 'legacy')
 

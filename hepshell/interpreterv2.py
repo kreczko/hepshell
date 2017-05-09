@@ -3,8 +3,9 @@ from __future__ import print_function
 import click
 import os
 from plumbum.cmd import grep
+import logging
 
-
+logger = logging.getLogger(__name__)
 
 # plugin_folder = os.path.join(os.path.dirname(__file__), 'commands')
 
@@ -23,9 +24,9 @@ from plumbum.cmd import grep
 
 
 def contains_command(python_file):
+    logger.debug('Checking file {0}'.format(python_file))
     try:
-        v1 = grep(['click.command', python_file])
-        v2 = grep(['click.command', python_file])
+        r = grep(['click.command', python_file])
         return r != ''
     except:
         # not a valid command
@@ -34,9 +35,17 @@ def contains_command(python_file):
 
 class HEPInterpreter(click.MultiCommand):
 
+    self._commands = []
+
     def list_commands(self, ctx):
         from . import SETTINGS as s
         rv = []
+        for plugin_folder in s.PLUGINS:
+            logger.info('Checking folder {0}'.format(plugin_folder))
+            rv.extend(list(self._extract_commands(plugin_folder)))
+        return rv
+
+    def _extract_commands(self, plugin_folder):
         for path, _, files in sorted(os.walk(plugin_folder)):
             relative_path = os.path.relpath(path, plugin_folder)
             for f in files:
@@ -45,31 +54,34 @@ class HEPInterpreter(click.MultiCommand):
                     if contains_command(absolute_path):
                         c_name = f[:-3]
                         if relative_path == '.':
-                            rv.append(c_name)
+                            yield c_name
                         else:
                             c = relative_path.replace('/', ' ')
-                            rv.append('{0} {1}'.format(c, c_name))
-        return rv
+                            yield '{0} {1}'.format(c, c_name)
 
     def get_command(self, ctx, name):
         if name == '__init__':
             return None
+        from . import SETTINGS as s
         # make a path from the known command
         full_path = name.replace(' ', '/')
         # TODO: replace with logging, DEBUG
         print('Looking for command "{0}"'.format(name))
         ns = {}
         # TODO: look through all plugin folders
-        fn = os.path.join(plugin_folder, full_path + '.py')
-        # click commands
-        with open(fn) as f:
-            code = compile(f.read(), fn, 'exec')
-            eval(code, ns, ns)
-        # print('+' * 80)
-        # print(name, ns[name.split()[-1]])
-        # print('+' * 80)
+        for plugin_folder in s.PLUGINS:
+            fn = os.path.join(plugin_folder, full_path + '.py')
+            if not os.path.exists(fn):
+                continue
+            # click commands
+            with open(fn) as f:
+                code = compile(f.read(), fn, 'exec')
+                eval(code, ns, ns)
+            print('+' * 80)
+            print(name, ns[name.split()[-1]])
+            print('+' * 80)
 
-        ns[name] = ns[name.split()[-1]]
+            ns[name] = ns[name.split()[-1]]
         return ns[name]
 
     def resolve_command(self, ctx, args):
@@ -90,15 +102,15 @@ class HEPInterpreter(click.MultiCommand):
                 break
         new_arguments = [passed_cmd]
         new_arguments.extend(args[args_start:])
-        return super(MyCLI, self).resolve_command(ctx, new_arguments)
+        return super(HEPInterpreter, self).resolve_command(ctx, new_arguments)
 
     # def invoke(self, ctx):
     #     print('>> invoke',ctx.protected_args, ctx.invoked_subcommand)
-    #     return super(MyCLI, self).invoke(ctx)
+    #     return super(HEPInterpreter, self).invoke(ctx)
     #
     # def parse_args(self, ctx, args):
     #     print('>> parse', args)
-    #     return super(MyCLI, self).parse_args(ctx, args)
+    #     return super(HEPInterpreter, self).parse_args(ctx, args)
 
 
 @click.group(cls=HEPInterpreter)

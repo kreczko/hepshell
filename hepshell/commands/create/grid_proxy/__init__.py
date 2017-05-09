@@ -1,10 +1,10 @@
 """
     create grid_proxy:
         Retrieves the grid certificate proxy from the users certificate.
-        
+
     Usage:
         create grid_proxy [vo=<x>] [hours=<x>]
-        
+
     Parameters:
         vo:    Virtual Organisation (VO) to assign.
                User must be member of that VO.
@@ -12,7 +12,7 @@
         hours: Number of hours the proxy should be valid for.
                Default: 80. Must be an integer. The maximum allowed
                length depends on the machine configuration.
-              
+
 """
 import logging
 import hepshell
@@ -36,7 +36,7 @@ class Command(hepshell.Command):
         hours = str(self.__variables['hours'])
         command = ['voms-proxy-init', '-voms', vo, '-hours', hours]
 
-        from hepshell.interpreter import call
+        from hepshell.interpreter_legacy import call
         call(command, logger=LOG, shell=True, redirect=False)
 
         return True

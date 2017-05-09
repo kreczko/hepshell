@@ -11,6 +11,9 @@ if not 'HEP_PROJECT_ROOT' in os.environ:
     sys.exit(-1)
 HEP_PROJECT_ROOT = os.environ['HEP_PROJECT_ROOT']
 
+HEP_PATH = os.path.dirname(__file__)
+HEP_PATH = os.path.join(HEP_PATH, '..')
+
 LOG = logging.getLogger('hepshell')
 LOG.setLevel(logging.DEBUG)
 # logging to a file
@@ -50,6 +53,7 @@ run_command = interpreter.run_command
 
 __all__ = [
     'interpreter',
+    'interpreterv2',
     'run_cli',
     'run_command',
     'SETTINGS',

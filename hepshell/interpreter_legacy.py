@@ -7,6 +7,7 @@ import logging
 import select
 import subprocess
 import resource
+import six
 
 LOG = logging.getLogger(__name__)
 
@@ -263,7 +264,7 @@ def run_cli(prompt='hep > '):
     done = 0
     while not done:
         try:
-            cmd = raw_input(prompt)
+            cmd = input(prompt)
             readline.write_history_file(HISTFILE)
             if cmd in ['exit', 'quit', 'q']:
                 run_command(['quit'])
@@ -303,7 +304,7 @@ def __call_with_redirection(cmd_and_args, logger, stdout_log_level=logging.DEBUG
     From: https://gist.github.com/bgreenlee/1402841
     """
     msg = 'executing: {0}'.format(cmd_and_args)
-    if not isinstance(cmd_and_args, basestring):
+    if not isinstance(cmd_and_args, six.string_types):
         msg = 'executing: {0}'.format(' '.join(cmd_and_args))
     logger.debug(msg)
     child = subprocess.Popen(

@@ -1,7 +1,7 @@
 """
     check grid_proxy:
         Retrieves the grid certificate proxy from the users certificate.
-        
+
     Usage:
         check grid_proxy
 """
@@ -40,7 +40,7 @@ class Command(hepshell.Command):
 
     def run(self, args, variables):
         self.__prepare(args, variables)
-        from hepshell.interpreter import call
+        from hepshell.interpreter_legacy import call
         proxy = get_x509_proxy()
         is_valid = os.path.isfile(proxy)
         time_left = 0
