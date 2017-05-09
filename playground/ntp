@@ -49,6 +49,10 @@ class MyCLI(click.MultiCommand):
         return rv
 
     def get_command(self, ctx, name):
+        '''
+            Loads the command, e.g. 'run analysis', from the plugin folders
+            and stores it in the namespace
+        '''
         if name == '__init__':
             return None
         full_path = name.replace(' ', '/')
@@ -61,7 +65,7 @@ class MyCLI(click.MultiCommand):
         # print('+' * 80)
         # print(name, ns[name.split()[-1]])
         # print('+' * 80)
-
+        # the function
         ns[name] = ns[name.split()[-1]]
         return ns[name]
 

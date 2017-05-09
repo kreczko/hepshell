@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import click
+import click_log
 import os
 from plumbum.cmd import grep
 import logging
@@ -35,14 +36,17 @@ def contains_command(python_file):
 
 class HEPInterpreter(click.MultiCommand):
 
-    self._commands = []
+    _commands = []
 
     def list_commands(self, ctx):
+        if HEPInterpreter._commands:
+            return HEPInterpreter._commands
         from . import SETTINGS as s
         rv = []
         for plugin_folder in s.PLUGINS:
             logger.info('Checking folder {0}'.format(plugin_folder))
             rv.extend(list(self._extract_commands(plugin_folder)))
+        HEPInterpreter._commands = rv
         return rv
 
     def _extract_commands(self, plugin_folder):
@@ -66,7 +70,7 @@ class HEPInterpreter(click.MultiCommand):
         # make a path from the known command
         full_path = name.replace(' ', '/')
         # TODO: replace with logging, DEBUG
-        print('Looking for command "{0}"'.format(name))
+        # logger.info('Looking for command "{0}"'.format(name))
         ns = {}
         # TODO: look through all plugin folders
         for plugin_folder in s.PLUGINS:
@@ -77,11 +81,15 @@ class HEPInterpreter(click.MultiCommand):
             with open(fn) as f:
                 code = compile(f.read(), fn, 'exec')
                 eval(code, ns, ns)
-            print('+' * 80)
-            print(name, ns[name.split()[-1]])
-            print('+' * 80)
 
             ns[name] = ns[name.split()[-1]]
+            break
+
+        # logger.info(name)
+        # logger.info(ns[name].__name__)
+        # logger.info(ns.keys())
+        if not ns:
+            return
         return ns[name]
 
     def resolve_command(self, ctx, args):
@@ -90,13 +98,13 @@ class HEPInterpreter(click.MultiCommand):
             the command against known commands and adjusting arguments
             accordingly.
         '''
-        valid_commads = self.list_commands(ctx)
-        passed_cmd = args[0]
+        valid_commands = self.list_commands(ctx)
+        passed_cmd = None
         args_start = 1
         n_args = len(args)
         for i in range(n_args):
             tmp_cmd = ' '.join(args[:n_args - i])
-            if tmp_cmd in valid_commads:
+            if tmp_cmd in valid_commands:
                 passed_cmd = tmp_cmd
                 args_start = n_args - i
                 break
@@ -115,9 +123,12 @@ class HEPInterpreter(click.MultiCommand):
 
 @click.group(cls=HEPInterpreter)
 @click.pass_context
+@click_log.simple_verbosity_option()
+@click_log.init(__name__)
 def run_cli(ctx):
     """ something"""
-    print(ctx.invoked_subcommand)
+    pass
+    # print(ctx.invoked_subcommand)
     # print(ctx.invoked_subcommand)
     # for k,v in ctx.__dict__.iteritems():
     #     print('{0}: {1}'.format(k, v))
