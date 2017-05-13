@@ -2,3 +2,4 @@ nose
 click>=5.0
 click-log
 plumbum
+six
