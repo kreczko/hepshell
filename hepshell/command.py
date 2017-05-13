@@ -43,7 +43,8 @@ class Command(object):
         if self.__doc:
             return self.__doc
         else:
-            return 'Documentation for command "{0}" is missing'.format(self.__name)
+            msg = 'Documentation for command "{0}" is missing'
+            return msg.format(self.__name)
 
     def __parse_arguments(self, args):
         """ This function is command specific """

@@ -12,17 +12,20 @@ import hepshell
 
 LOG = logging.getLogger(__name__)
 
+
 def get_x509_proxy():
     '''
         Helper function to get x509 either from env or tmp file
-        (taken from https://github.com/dmwm/DAS/blob/master/src/python/DAS/tools/das_client.py)
+        (taken from https://github.com/dmwm/DAS/blob/master/src/python/DAS/
+        tools/das_client.py)
     '''
     proxy = os.environ.get('X509_USER_PROXY', '')
-    if  not proxy:
-        proxy = '/tmp/x509up_u%s' % pwd.getpwuid( os.getuid() ).pw_uid
-        if  not os.path.isfile(proxy):
+    if not proxy:
+        proxy = '/tmp/x509up_u%s' % pwd.getpwuid(os.getuid()).pw_uid
+        if not os.path.isfile(proxy):
             return ''
     return proxy
+
 
 class Command(hepshell.Command):
 
@@ -59,7 +62,8 @@ class Command(hepshell.Command):
                 msg + 'could not read time left on proxy.'
                 LOG.warning(msg)
                 LOG.debug(
-                    "Command output: {0}".format(stdout.encode('string-escape')))
+                    "Command output: {0}".format(
+                        stdout.encode('string-escape')))
             self.__results['timeleft_in_seconds'] = time_left
             self.__results['timeleft_in_minutes'] = time_left / 60
             LOG.info('Time left on proxy: {0} min'.format(

@@ -1,6 +1,8 @@
 import logging
-import click, click_log
+import click
+
 logger = logging.getLogger(__name__)
+
 
 @click.command()
 @click.argument('name')

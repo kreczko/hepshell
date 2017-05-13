@@ -1,11 +1,11 @@
-from hepshell import HEP_PROJECT_ROOT
+import logging
 import hepshell.SETTINGS as s
 
 logger = logging.getLogger(s.LOG['name'])
 logger.setLevel(logging.INFO)
 if s.LOG['logToFile']:
     formatter = logging.Formatter(
-    '%(asctime)s [%(name)s]  %(levelname)s: %(message)s')
+        '%(asctime)s [%(name)s]  %(levelname)s: %(message)s')
 
     logfile = s.LOG['logFile']
     fh = logging.FileHandler(logfile)

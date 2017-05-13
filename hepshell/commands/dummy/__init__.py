@@ -2,10 +2,10 @@
     dummy:
         Just a dummy command to be copied & pasted when you create a new
         command.
-        
+
     Usage:
         dummy <nothing> [something]
-        
+
     Parameters:
         something: a weird parameter
 """
@@ -13,6 +13,7 @@ import logging
 import hepshell
 
 LOG = logging.getLogger(__name__)
+
 
 class Command(hepshell.Command):
 

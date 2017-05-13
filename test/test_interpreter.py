@@ -10,6 +10,7 @@ hepshell.SETTINGS.COMMANDS = [
 
 from hepshell import interpreter_legacy
 
+
 class TestInterpreter(unittest.TestCase):
 
     def setUp(self):

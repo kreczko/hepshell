@@ -3,9 +3,13 @@ import os
 import sys
 import logging
 
+from . import settings as SETTINGS
+from . import command
+from . import interpreter
+
 __version__ = '0.1.6'
 
-if not 'HEP_PROJECT_ROOT' in os.environ:
+if 'HEP_PROJECT_ROOT' not in os.environ:
     print("Could not find environmental variable 'HEP_PROJECT_ROOT'")
     print("You need to run 'source bin/env.sh' first!")
     sys.exit(-1)
@@ -38,17 +42,10 @@ else:
 ch.setFormatter(formatter)
 LOG.addHandler(ch)
 
-from . import settings as SETTINGS
-
-from . import command
 Command = command.Command
 
-
-from . import interpreter
 run_cli = interpreter.run_cli
 run_command = interpreter.run_command
-
-
 
 
 __all__ = [

@@ -23,6 +23,7 @@ LOGFILE = os.path.expanduser('~/.hepshell_log')
 COMPLETEKEY = 'tab'
 COMMANDS, HIERARCHY = {}, {}
 
+
 def time_function(name, logger):
     def _time_function(function):
         def __time_function(*args, **kwargs):
@@ -33,7 +34,8 @@ def time_function(name, logger):
             cpu_time = usage_end.ru_utime - usage_start.ru_utime
             # RSS = https://en.wikipedia.org/wiki/Resident_set_size
             memory = usage_end.ru_maxrss / 1024.  # now in MB
-            msg = "Ran '{name}' in {cpu_time:.1f}s and used {memory:.1f}MB of RAM"
+            msg = "Ran '{name}' in {cpu_time:.1f}s" + \
+                " and used {memory:.1f}MB of RAM"
             msg = msg.format(name=name, cpu_time=cpu_time, memory=memory)
             logger.info(msg)
             return result
@@ -60,13 +62,13 @@ def __build_hierarchy(hierarchy, path, command):
     if ' ' in path:
         elements = path.split(' ')
         current = elements[0]
-        if not current in hierarchy:
+        if current not in hierarchy:
             hierarchy[current] = collections.OrderedDict()
         new_path = ' '.join(elements[1:])
         __build_hierarchy(hierarchy[current], new_path, command)
     else:
         # check if such a hepshell command exists
-        if not path in hierarchy:
+        if path not in hierarchy:
             hierarchy[path] = collections.OrderedDict([('this', command)])
         else:
             # overwrite the hepshell command with custom one
@@ -148,7 +150,7 @@ def __traverse(commands, tokens, incomplete, results=[]):
             __traverse(commands[t], tokens, incomplete, results)
     elif n_tokens == 1:
         t = tokens.pop(0)
-        if t in commands and not t in IGNORE_KEYS:
+        if t in commands and t not in IGNORE_KEYS:
             current = commands[t]
             if incomplete:
                 results.append(t)
@@ -158,11 +160,11 @@ def __traverse(commands, tokens, incomplete, results=[]):
                 __traverse(current, tokens, incomplete, results)
         else:
             for command in commands:
-                if command.startswith(t) and not command in IGNORE_KEYS:
+                if command.startswith(t) and command not in IGNORE_KEYS:
                     results.append(command)
     elif n_tokens == 0:
         for command in commands:
-            if not command in IGNORE_KEYS:
+            if command not in IGNORE_KEYS:
                 results.append(command)
 
 
@@ -178,8 +180,7 @@ def __complete(text, state):
 
     results = []
     __traverse(HIERARCHY, tokens, incomplete, results)
-    f = lambda x: x + ' '
-    results = map(f, results)
+    results = map(lambda x: x + ' ', results)
     return results[state]
 
 
@@ -296,7 +297,11 @@ def run_command(args):
     return __execute(command, parameters, variables)
 
 
-def __call_with_redirection(cmd_and_args, logger, stdout_log_level=logging.DEBUG, stderr_log_level=logging.ERROR, **kwargs):
+def __call_with_redirection(cmd_and_args,
+                            logger,
+                            stdout_log_level=logging.DEBUG,
+                            stderr_log_level=logging.ERROR,
+                            **kwargs):
     """
     Variant of subprocess.call that accepts a logger instead of stdout/stderr,
     and logs stdout messages via logger.debug and stderr messages via
