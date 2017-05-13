@@ -8,7 +8,8 @@ before_script:
   - python setup.py develop
   - export HEP_PROJECT_ROOT=$PWD
   - python -c 'import hepshell'
+  - export PATH=$PWD/bin:$PATH
 
 
-script: 
+script:
   - nosetests -v

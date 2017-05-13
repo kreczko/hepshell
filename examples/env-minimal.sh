@@ -40,7 +40,7 @@ if [ -n "${old_projectbase}" ] ; then
       PATH=$newpath
    fi
    if [ -n "${PYTHONPATH}" ]; then
-      drop_from_path $PYTHONPATH ${old_projectbase}/python
+      drop_from_path $PYTHONPATH ${old_projectbase}
       PYTHONPATH=$newpath
    fi
 fi
@@ -52,9 +52,9 @@ else
 fi
 
 if [ -z "${PYTHONPATH}" ]; then
-   PYTHONPATH=$HEP_PROJECT_ROOT/python; export PYTHONPATH
+   PYTHONPATH=$HEP_PROJECT_ROOT; export PYTHONPATH
 else
-   PYTHONPATH=$HEP_PROJECT_ROOT/python:$PYTHONPATH; export PYTHONPATH
+   PYTHONPATH=$HEP_PROJECT_ROOT:$PYTHONPATH; export PYTHONPATH
 fi
 
 unset old_projectbase
