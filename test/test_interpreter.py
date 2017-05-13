@@ -8,6 +8,8 @@ hepshell.SETTINGS.COMMANDS = [
     'hepshell.commands',
 ]
 
+from hepshell import interpreter_legacy
+
 class TestInterpreter(unittest.TestCase):
 
     def setUp(self):
@@ -17,13 +19,13 @@ class TestInterpreter(unittest.TestCase):
 
     def test_find_command(self):
         from hepshell.commands.help import Command as HC
-        command, args = hepshell.interpreter._find_command_and_args(
+        command, args = hepshell.interpreter_legacy._find_command_and_args(
             self.cli_input1)
         self.assertIsInstance(command, HC)
         self.assertEqual(args, self.cli_input1[1:])
 
     def test_parse1(self):
-        args, params = hepshell.interpreter._parse_args(
+        args, params = hepshell.interpreter_legacy._parse_args(
             self.args1)
         self.assertEqual(len(args), 1)
         self.assertEqual(args[0], 'list')
@@ -35,7 +37,7 @@ class TestInterpreter(unittest.TestCase):
         self.assertAlmostEqual(params['lumi'], 100.05, delta=0.001)
 
     def test_parse2(self):
-        args, params = hepshell.interpreter._parse_args(
+        args, params = hepshell.interpreter_legacy._parse_args(
             self.args2)
         self.assertEqual(len(args), 1)
         self.assertEqual(args[0], 'list')

@@ -44,7 +44,7 @@ class HEPInterpreter(click.MultiCommand):
         from . import SETTINGS as s
         rv = []
         for plugin_folder in s.PLUGINS:
-            logger.info('Checking folder {0}'.format(plugin_folder))
+            logger.debug('Checking folder {0}'.format(plugin_folder))
             rv.extend(list(self._extract_commands(plugin_folder)))
         HEPInterpreter._commands = rv
         return rv
@@ -102,14 +102,17 @@ class HEPInterpreter(click.MultiCommand):
         passed_cmd = None
         args_start = 1
         n_args = len(args)
-        for i in range(n_args):
-            tmp_cmd = ' '.join(args[:n_args - i])
+
+        for i in range(n_args, -1, -1):
+            tmp_cmd = ' '.join(args[:i])
             if tmp_cmd in valid_commands:
                 passed_cmd = tmp_cmd
-                args_start = n_args - i
+                args_start = i
                 break
+
         new_arguments = [passed_cmd]
         new_arguments.extend(args[args_start:])
+        # print('New args:', new_arguments, args_start, i)
         return super(HEPInterpreter, self).resolve_command(ctx, new_arguments)
 
     # def invoke(self, ctx):
@@ -126,25 +129,4 @@ class HEPInterpreter(click.MultiCommand):
 @click_log.simple_verbosity_option()
 @click_log.init(__name__)
 def run_cli(ctx):
-    """ something"""
     pass
-    # print(ctx.invoked_subcommand)
-    # print(ctx.invoked_subcommand)
-    # for k,v in ctx.__dict__.iteritems():
-    #     print('{0}: {1}'.format(k, v))
-    # c = click.get_current_context()
-    # for k,v in c.__dict__.iteritems():
-    #     print('{0}: {1}'.format(k, v))
-
-
-# @click.option('--count', default=1, help='Number of greetings.')
-# @click.option('--name', prompt='Your name', help='The person to greet')
-# @ntp.command('hello there')
-# @click.argument('files',nargs=-1, type=click.Path(exists=True))
-# def hello(files):
-#     for f in files:
-#         click.echo(f)
-#
-# @ntp.command()
-# def dropdb():
-#     click.echo('Dropped the database')

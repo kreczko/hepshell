@@ -53,7 +53,6 @@ run_command = interpreter.run_command
 
 __all__ = [
     'interpreter',
-    'interpreterv2',
     'run_cli',
     'run_command',
     'SETTINGS',

@@ -12,5 +12,5 @@ before_script:
 
 
 script:
+  - source bin/env.sh
   - nosetests -v
-  
